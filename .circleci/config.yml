@@ -73,7 +73,7 @@ jobs:
       - run:
           command: |
             while true; do
-              sleep 5
+              sleep 2
               ps auxwwf
               echo "======"
             done
