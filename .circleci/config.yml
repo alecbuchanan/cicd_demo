@@ -70,6 +70,14 @@ jobs:
         type: boolean
     parallelism: 2
     steps:
+      - run:
+          command: |
+            while true; do
+              sleep 5
+              ps auxwwf
+              echo "======"
+            done
+          background: true
       - checkout
       - restore_cache:
           key: -pypi-<<parameters.cache-version>>-<<#parameters.include-branch-in-cache-key>>{{ .Branch }}-<</parameters.include-branch-in-cache-key>>{{ checksum "<< parameters.app-dir >>/<<parameters.pip-dependency-file>>" }}-<<#parameters.include-python-in-cache-key>>{{ checksum "/home/circleci/.pyenv/version" }}-<</parameters.include-python-in-cache-key>>
