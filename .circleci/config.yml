@@ -233,6 +233,8 @@ workflows:
        - test:
            pre-steps:
              - build-tools/memory
+           post-steps:
+             - build-tools/store-report
            requires:
              - build
        - manual-approval:
