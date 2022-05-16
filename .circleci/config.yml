@@ -1,6 +1,7 @@
 version: 2.1
 
 orbs:
+  win: circleci/windows@2.2.0
   python: circleci/python@1.5.0
   gcp-gcr: circleci/gcp-gcr@0.15.0
   gcp-gke: circleci/gcp-gke@1.4.0
