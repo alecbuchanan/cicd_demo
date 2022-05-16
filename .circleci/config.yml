@@ -38,11 +38,14 @@ commands:
 
 jobs:
   build:
-    executor: python/default
+#    executor: python/default
+    executor:
+      name: win/default
+      shell: bash.exe
     steps:
       - checkout
-      - python/install-packages:
-          pkg-manager: pip
+#      - python/install-packages:
+#          pkg-manager: pip
 
   test:
     executor: my-executor
