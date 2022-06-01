@@ -10,6 +10,9 @@ executors:
   my-executor:
       docker:
           - image: cimg/python:3.10.2
+  test_jdk:
+      docker:
+          - image: cimg/openjdk:8.0
 
 parameters:
   cleanup:
@@ -37,11 +40,10 @@ commands:
 
 jobs:
   build:
-    executor: python/default
+    executor: test_jdk
     steps:
       - checkout
-      - python/install-packages:
-          pkg-manager: pip
+      - run: sed -v
 
   test:
     executor: my-executor
