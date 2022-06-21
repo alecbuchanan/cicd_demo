@@ -1,3 +1,34 @@
+#version: 2.1
+#jobs:
+# build:
+#   docker:
+#     - image: cimg/base:2021.11
+#   resource_class: db-cci-ns/container-agent-preview-db
+#   steps:
+#     - run: echo "hello world"
+# test:
+#   docker:
+#     - image: cimg/base:2021.11
+#   resource_class: db-cci-ns/container-agent-preview-db
+#   steps:
+#     - run: echo "hello world"
+# deploy:
+#   docker:
+#     - image: cimg/base:2021.11
+#   resource_class: db-cci-ns/container-agent-preview-db
+#   steps:
+#     - run: echo "hello world"
+#workflows:
+# main-workflow:
+#   jobs:
+#     - build
+#     - test:
+#        requires:
+#         - build
+#     - deploy:
+#        requires:
+#         - test
+
 version: 2.1
 
 orbs:
@@ -37,8 +68,9 @@ commands:
 
 jobs:
   test_runner:
-    machine: true
-    resource_class: test_runner/container-agent
+    docker:
+      - image: cimg/base:2021.11
+      resource_class: test_runner/container-agent
     steps:
       - run: echo "Hi I'm on Containers!"
 
@@ -180,8 +212,8 @@ jobs:
       - run:
           name: Capture Contour routes as DAG
           command: |
-            sleep 10 
-            # let release agent catch deploy, tell contour to shape traffic. 
+            sleep 10
+            # let release agent catch deploy, tell contour to shape traffic.
             # must be a smarter way
             vamp/get-dag-as-dot.sh
             cat contour-dag.dot
@@ -211,8 +243,8 @@ jobs:
       - run:
           name: Capture Contour routes as DAG
           command: |
-            sleep 2 
-            # let release agent catch deploy, tell contour to shape traffic. 
+            sleep 2
+            # let release agent catch deploy, tell contour to shape traffic.
             # must be a smarter way
             vamp/get-dag-as-dot.sh
             cat contour-dag.dot
@@ -250,27 +282,27 @@ workflows:
            name: << pipeline.parameters.job_name >>
 
 
-###########################################################################################################################
-# setup workflows ##
-#version: 2.1
-#
-## denotes that it is setup workflow
-#setup: true
-#
-## using the path filtering orb
-#orbs:
-#   path-filtering: circleci/path-filtering@0.1.1
-#
-## workflow using path-filtering orb (w/ built in continuation)
-#workflows:
-#  setup-workflow:
-#    jobs:
-#      - path-filtering/filter:
-#          base-revision: main
-#          config-path: .circleci/continue-config.yml
-#          mapping: |
-#            mysite/.* mysite true
-#            polls/.* polls true
-#            .circleci/.* circle-ci true
-#            docs/.* docs true
-#            shared/.* run-them-all true
+############################################################################################################################
+## setup workflows ##
+##version: 2.1
+##
+### denotes that it is setup workflow
+##setup: true
+##
+### using the path filtering orb
+##orbs:
+##   path-filtering: circleci/path-filtering@0.1.1
+##
+### workflow using path-filtering orb (w/ built in continuation)
+##workflows:
+##  setup-workflow:
+##    jobs:
+##      - path-filtering/filter:
+##          base-revision: main
+##          config-path: .circleci/continue-config.yml
+##          mapping: |
+##            mysite/.* mysite true
+##            polls/.* polls true
+##            .circleci/.* circle-ci true
+##            docs/.* docs true
+##            shared/.* run-them-all true
