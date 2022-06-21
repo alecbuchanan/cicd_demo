@@ -70,7 +70,7 @@ jobs:
   test_runner:
     docker:
       - image: cimg/base:2021.11
-      resource_class: test_runner/container-agent
+    resource_class: test_runner/container-agent
     steps:
       - run: echo "Hi I'm on Containers!"
 
