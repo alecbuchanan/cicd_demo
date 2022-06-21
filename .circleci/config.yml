@@ -3,19 +3,19 @@ jobs:
  build:
    docker:
      - image: cimg/base:2021.11
-   resource_class: db-cci-ns/container-agent-preview-db
+   resource_class: test_runner/container-agent
    steps:
      - run: echo "hello world"
  test:
    docker:
      - image: cimg/base:2021.11
-   resource_class: db-cci-ns/container-agent-preview-db
+   resource_class: test_runner/container-agent
    steps:
      - run: echo "hello world"
  deploy:
    docker:
      - image: cimg/base:2021.11
-   resource_class: db-cci-ns/container-agent-preview-db
+   resource_class: test_runner/container-agent
    steps:
      - run: echo "hello world"
 workflows:
