@@ -223,6 +223,7 @@ workflows:
    main:
      unless: << pipeline.parameters.cleanup >>
      jobs:
+       - test_runner
        - build
        - lint:
            requires:
