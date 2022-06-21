@@ -36,6 +36,12 @@ commands:
             source $BASH_ENV
 
 jobs:
+  test_runner:
+    machine: true
+    resource_class: test_runner/container-agent
+    steps:
+      - run: echo "Hi I'm on Containers!"
+
   build:
     executor: python/default
     steps:
