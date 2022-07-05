@@ -75,8 +75,9 @@ jobs:
           command: |
             while true; do
               sleep 5
-              printf "\n\n$(date)\n"
-              top -b -c -n 1
+              # NOTE: on MacOS, the f argument is not supported.
+              # In this case, you can drop the f argument instead.
+              ps auxwwf
               echo "======"
             done
           background: true
