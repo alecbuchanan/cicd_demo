@@ -73,6 +73,7 @@ jobs:
       - checkout
       - run:
           command: |
+            apt install iotop
             sudo iotop
           background: true
       - restore_cache:
