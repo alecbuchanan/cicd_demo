@@ -73,11 +73,7 @@ jobs:
       - checkout
       - run:
           command: |
-            while true; do
-              sleep 5
-              iostat
-              echo "======"
-            done
+            iostat
           background: true
       - restore_cache:
           key: -pypi-<<parameters.cache-version>>-<<#parameters.include-branch-in-cache-key>>{{ .Branch }}-<</parameters.include-branch-in-cache-key>>{{ checksum "<< parameters.app-dir >>/<<parameters.pip-dependency-file>>" }}-<<#parameters.include-python-in-cache-key>>{{ checksum "/home/circleci/.pyenv/version" }}-<</parameters.include-python-in-cache-key>>
