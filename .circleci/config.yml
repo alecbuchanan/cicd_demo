@@ -71,7 +71,16 @@ jobs:
     parallelism: 2
     steps:
       - checkout
-      - run: du -h
+      - run:
+          command: |
+            while true; do
+              sleep 5
+              # NOTE: on MacOS, the f argument is not supported.
+              # In this case, you can drop the f argument instead.
+              ps auxwwf
+              echo "======"
+            done
+            background: true
       - restore_cache:
           key: -pypi-<<parameters.cache-version>>-<<#parameters.include-branch-in-cache-key>>{{ .Branch }}-<</parameters.include-branch-in-cache-key>>{{ checksum "<< parameters.app-dir >>/<<parameters.pip-dependency-file>>" }}-<<#parameters.include-python-in-cache-key>>{{ checksum "/home/circleci/.pyenv/version" }}-<</parameters.include-python-in-cache-key>>
       - python/install-packages:
