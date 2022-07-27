@@ -1,4 +1,5 @@
 import datetime
+from random import random
 
 from django.test import TestCase
 from django.utils import timezone
