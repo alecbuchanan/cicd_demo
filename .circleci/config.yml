@@ -218,23 +218,23 @@ workflows:
      unless: << pipeline.parameters.cleanup >>
      jobs:
        - build
-       - lint:
-           requires:
-             - build
+#       - lint:
+#           requires:
+#             - build
        - test:
            requires:
              - build
-       - manual-approval:
-           type: approval
-           requires:
-             - lint
-             - test
-       - build-and-push-image:
-           requires:
-             - manual-approval
-       - update-deployment:
-           requires:
-             - build-and-push-image
+#       - manual-approval:
+#           type: approval
+#           requires:
+#             - lint
+#             - test
+#       - build-and-push-image:
+#           requires:
+#             - manual-approval
+#       - update-deployment:
+#           requires:
+#             - build-and-push-image
 
    the-fixer:
      when: << pipeline.parameters.cleanup >>
