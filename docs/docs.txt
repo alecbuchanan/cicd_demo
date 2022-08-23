@@ -1,1 +1,1 @@
-Testing for dynamic config
+Testing for dynamic config.

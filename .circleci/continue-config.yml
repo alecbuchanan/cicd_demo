@@ -1,209 +1,209 @@
-#version: 2.1
-#
-#orbs:
-#  python: circleci/python@1.5.0
-#  gcp-gcr: circleci/gcp-gcr@0.13.0
-#  gcp-gke: circleci/gcp-gke@1.4.0
-#
-#executors:
-#  my-executor:
-#      docker:
-#          - image: cimg/python:3.10.2
-#
-#parameters:
-#  mysite:
-#    type: boolean
-#    default: false
-#  polls:
-#    type: boolean
-#    default: false
-#  circle-ci:
-#    type: boolean
-#    default: false
-#  docs:
-#    type: boolean
-#    default: false
-#  run-them-all:
-#    type: boolean
-#    default: false
-#
-#jobs:
-#  build:
-#    executor: python/default
-#    steps:
-#      - checkout
-#      - python/install-packages:
-#          pkg-manager: pip
-#
-#  test:
-#    executor: my-executor
-#    parameters:
-#      include-branch-in-cache-key:
-#        default: true
-#        description: |
-#          If true, this cache bucket will only apply to jobs within the same branch.
-#        type: boolean
-#      pip-dependency-file:
-#        default: requirements.txt
-#        description: Name of the requirements file that needs to be installed with pip. Prepended with `app-dir`. If using pipenv or poetry, this is ignored.
-#        type: string
-#      cache-version:
-#        default: v1
-#        description: Change the default cache version if you need to clear the cache for any reason.
-#        type: string
-#      app-dir:
-#        default: ~/project
-#        description: Path to the directory containing your python project. Not needed if dependency file lives in the root.
-#        type: string
-#      include-python-in-cache-key:
-#        default: true
-#        description: |
-#          If true, this cache bucket will checksum the pyenv python version with the cache-key
-#        type: boolean
-#    parallelism: 2
-#    steps:
-#      - checkout
-#      - restore_cache:
-#          key: -pypi-<<parameters.cache-version>>-<<#parameters.include-branch-in-cache-key>>{{ .Branch }}-<</parameters.include-branch-in-cache-key>>{{ checksum "<< parameters.app-dir >>/<<parameters.pip-dependency-file>>" }}-<<#parameters.include-python-in-cache-key>>{{ checksum "/home/circleci/.pyenv/version" }}-<</parameters.include-python-in-cache-key>>
-#      - python/install-packages:
-#          args: pytest
-#          pkg-manager: pip
-#          pypi-cache: false
-#      - run: mkdir test-report
-#      - run: pytest --circleci-parallelize --junit-xml=test-report/report.xml
-#      - store_test_results:
-#          path: test-report
-#      - store_artifacts:
-#          path: test-report
-#
-#  lint:
-#    executor: python/default
-#    parameters:
-#      include-branch-in-cache-key:
-#        default: true
-#        description: |
-#          If true, this cache bucket will only apply to jobs within the same branch.
-#        type: boolean
-#      pip-dependency-file:
-#        default: requirements.txt
-#        description: Name of the requirements file that needs to be installed with pip. Prepended with `app-dir`. If using pipenv or poetry, this is ignored.
-#        type: string
-#      cache-version:
-#        default: v1
-#        description: Change the default cache version if you need to clear the cache for any reason.
-#        type: string
-#      app-dir:
-#        default: ~/project
-#        description: Path to the directory containing your python project. Not needed if dependency file lives in the root.
-#        type: string
-#      include-python-in-cache-key:
-#        default: true
-#        description: |
-#          If true, this cache bucket will checksum the pyenv python version with the cache-key
-#        type: boolean
-#    steps:
-#      - checkout
-#      - restore_cache:
-#          key: -pypi-<<parameters.cache-version>>-<<#parameters.include-branch-in-cache-key>>{{ .Branch }}-<</parameters.include-branch-in-cache-key>>{{ checksum "<< parameters.app-dir >>/<<parameters.pip-dependency-file>>" }}-<<#parameters.include-python-in-cache-key>>{{ checksum "/home/circleci/.pyenv/version" }}-<</parameters.include-python-in-cache-key>>
-#      - python/install-packages:
-#          args: pylint
-#          pkg-manager: pip
-#          pypi-cache: false
-#      - run:
-#          command: |
-#            pylint polls --exit-zero
-#          name: linting
-#
-#  docs:
-#    machine: true
-#    steps:
-#      - checkout
-#      - run: "echo 'Hello from Docs!'"
-#      - run: cat docs/docs.txt
-#
-#workflows:
-#  circle-ci:
-#    when:
-#      or:
-#        - << pipeline.parameters.circle-ci >>
-#        - << pipeline.parameters.run-them-all >>
-#    jobs:
-#      - build
-#
-#  docs:
-#    when:
-#      or:
-#        - << pipeline.parameters.docs >>
-#        - << pipeline.parameters.run-them-all >>
-#    jobs:
-#      - docs
-#
-#  mysite:
-#    when:
-#      or:
-#        - << pipeline.parameters.mysite >>
-#        - << pipeline.parameters.run-them-all >>
-#    jobs:
-#      - build
-#      - lint:
-#          requires:
-#            - build
-#      - test:
-#          requires:
-#            - build
-#      - manual-approval:
-#          type: approval
-#          requires:
-#            - lint
-#            - test
-#      - gcp-gcr/build-and-push-image:
-#          requires:
-#            - manual-approval
-#          executor: python/default
-#          image: circle-gke
-#          registry-url: us.gcr.io
-#          setup-remote-docker: true
-#          use-docker-layer-caching: true
-#      - gcp-gke/publish-and-rollout-image:
-#          requires:
-#            - gcp-gcr/build-and-push-image
-#          deployment: production-circle-demo
-#          cluster: circle-ci-cluster
-#          container: rusty-pangolin
-#          image: gcr.io/circle-ci-demo/circle-gke
-#          tag: "v10"
-#
-#  polls:
-#    when:
-#      or:
-#        - << pipeline.parameters.polls >>
-#        - << pipeline.parameters.run-them-all >>
-#    jobs:
-#      - build
-#      - lint:
-#          requires:
-#            - build
-#      - test:
-#          requires:
-#            - build
-#      - manual-approval:
-#          type: approval
-#          requires:
-#            - lint
-#            - test
-#      - gcp-gcr/build-and-push-image:
-#          requires:
-#            - manual-approval
-#          executor: my-executor
-#          image: circle-gke
-#          registry-url: us.gcr.io
-#          setup-remote-docker: true
-#          use-docker-layer-caching: true
-#      - gcp-gke/publish-and-rollout-image:
-#          requires:
-#            - gcp-gcr/build-and-push-image
-#          deployment: production-circle-demo
-#          cluster: circle-ci-cluster
-#          container: rusty-pangolin
-#          image: gcr.io/circle-ci-demo/circle-gke
-#          tag: "v10"
+version: 2.1
+
+orbs:
+  python: circleci/python@1.5.0
+  gcp-gcr: circleci/gcp-gcr@0.13.0
+  gcp-gke: circleci/gcp-gke@1.4.0
+
+executors:
+  my-executor:
+      docker:
+          - image: cimg/python:3.10.2
+
+parameters:
+  mysite:
+    type: boolean
+    default: false
+  polls:
+    type: boolean
+    default: false
+  circle-ci:
+    type: boolean
+    default: false
+  docs:
+    type: boolean
+    default: false
+  run-them-all:
+    type: boolean
+    default: false
+
+jobs:
+  build:
+    executor: python/default
+    steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: pip
+
+  test:
+    executor: my-executor
+    parameters:
+      include-branch-in-cache-key:
+        default: true
+        description: |
+          If true, this cache bucket will only apply to jobs within the same branch.
+        type: boolean
+      pip-dependency-file:
+        default: requirements.txt
+        description: Name of the requirements file that needs to be installed with pip. Prepended with `app-dir`. If using pipenv or poetry, this is ignored.
+        type: string
+      cache-version:
+        default: v1
+        description: Change the default cache version if you need to clear the cache for any reason.
+        type: string
+      app-dir:
+        default: ~/project
+        description: Path to the directory containing your python project. Not needed if dependency file lives in the root.
+        type: string
+      include-python-in-cache-key:
+        default: true
+        description: |
+          If true, this cache bucket will checksum the pyenv python version with the cache-key
+        type: boolean
+    parallelism: 2
+    steps:
+      - checkout
+      - restore_cache:
+          key: -pypi-<<parameters.cache-version>>-<<#parameters.include-branch-in-cache-key>>{{ .Branch }}-<</parameters.include-branch-in-cache-key>>{{ checksum "<< parameters.app-dir >>/<<parameters.pip-dependency-file>>" }}-<<#parameters.include-python-in-cache-key>>{{ checksum "/home/circleci/.pyenv/version" }}-<</parameters.include-python-in-cache-key>>
+      - python/install-packages:
+          args: pytest
+          pkg-manager: pip
+          pypi-cache: false
+      - run: mkdir test-report
+      - run: pytest --circleci-parallelize --junit-xml=test-report/report.xml
+      - store_test_results:
+          path: test-report
+      - store_artifacts:
+          path: test-report
+
+  lint:
+    executor: python/default
+    parameters:
+      include-branch-in-cache-key:
+        default: true
+        description: |
+          If true, this cache bucket will only apply to jobs within the same branch.
+        type: boolean
+      pip-dependency-file:
+        default: requirements.txt
+        description: Name of the requirements file that needs to be installed with pip. Prepended with `app-dir`. If using pipenv or poetry, this is ignored.
+        type: string
+      cache-version:
+        default: v1
+        description: Change the default cache version if you need to clear the cache for any reason.
+        type: string
+      app-dir:
+        default: ~/project
+        description: Path to the directory containing your python project. Not needed if dependency file lives in the root.
+        type: string
+      include-python-in-cache-key:
+        default: true
+        description: |
+          If true, this cache bucket will checksum the pyenv python version with the cache-key
+        type: boolean
+    steps:
+      - checkout
+      - restore_cache:
+          key: -pypi-<<parameters.cache-version>>-<<#parameters.include-branch-in-cache-key>>{{ .Branch }}-<</parameters.include-branch-in-cache-key>>{{ checksum "<< parameters.app-dir >>/<<parameters.pip-dependency-file>>" }}-<<#parameters.include-python-in-cache-key>>{{ checksum "/home/circleci/.pyenv/version" }}-<</parameters.include-python-in-cache-key>>
+      - python/install-packages:
+          args: pylint
+          pkg-manager: pip
+          pypi-cache: false
+      - run:
+          command: |
+            pylint polls --exit-zero
+          name: linting
+
+  docs:
+    machine: true
+    steps:
+      - checkout
+      - run: "echo 'Hello from Docs!'"
+      - run: cat docs/docs.txt
+
+workflows:
+  circle-ci:
+    when:
+      or:
+        - << pipeline.parameters.circle-ci >>
+        - << pipeline.parameters.run-them-all >>
+    jobs:
+      - build
+
+  docs:
+    when:
+      or:
+        - << pipeline.parameters.docs >>
+        - << pipeline.parameters.run-them-all >>
+    jobs:
+      - docs
+
+  mysite:
+    when:
+      or:
+        - << pipeline.parameters.mysite >>
+        - << pipeline.parameters.run-them-all >>
+    jobs:
+      - build
+      - lint:
+          requires:
+            - build
+      - test:
+          requires:
+            - build
+      - manual-approval:
+          type: approval
+          requires:
+            - lint
+            - test
+      - gcp-gcr/build-and-push-image:
+          requires:
+            - manual-approval
+          executor: python/default
+          image: circle-gke
+          registry-url: us.gcr.io
+          setup-remote-docker: true
+          use-docker-layer-caching: true
+      - gcp-gke/publish-and-rollout-image:
+          requires:
+            - gcp-gcr/build-and-push-image
+          deployment: production-circle-demo
+          cluster: circle-ci-cluster
+          container: rusty-pangolin
+          image: gcr.io/circle-ci-demo/circle-gke
+          tag: "v10"
+
+  polls:
+    when:
+      or:
+        - << pipeline.parameters.polls >>
+        - << pipeline.parameters.run-them-all >>
+    jobs:
+      - build
+      - lint:
+          requires:
+            - build
+      - test:
+          requires:
+            - build
+      - manual-approval:
+          type: approval
+          requires:
+            - lint
+            - test
+      - gcp-gcr/build-and-push-image:
+          requires:
+            - manual-approval
+          executor: my-executor
+          image: circle-gke
+          registry-url: us.gcr.io
+          setup-remote-docker: true
+          use-docker-layer-caching: true
+      - gcp-gke/publish-and-rollout-image:
+          requires:
+            - gcp-gcr/build-and-push-image
+          deployment: production-circle-demo
+          cluster: circle-ci-cluster
+          container: rusty-pangolin
+          image: gcr.io/circle-ci-demo/circle-gke
+          tag: "v10"
