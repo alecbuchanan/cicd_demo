@@ -44,7 +44,10 @@ jobs:
           pkg-manager: pip
 
   test:
-    executor: my-executor
+#
+    machine:
+      image: ubuntu-2004:202010-01 # recommended linux image
+      resource_class: large
     parameters:
       include-branch-in-cache-key:
         default: true
