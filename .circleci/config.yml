@@ -98,13 +98,18 @@ jobs:
     steps:
       - checkout
       - set-build-env
+      - run:
+          name: Update image & version in manifest
+          command: |
+            envsubst < /home/circleci/project/deployment.yaml > modified-deployment.yaml
+            cat modified-deployment.yaml
       - gcp-gke/update-kubeconfig-with-credentials:
           install-kubectl: true
           perform-login: true
           cluster: alec-buchanan-demo
       - kubernetes/create-or-update-resource:
           namespace: default
-          resource-file-path: /home/circleci/project/deployment.yaml
+          resource-file-path: modified-deployment.yaml
       - run: kubectl rollout status -f /home/circleci/project/deployment.yaml
 
 #  update-deployment:
@@ -115,11 +120,11 @@ jobs:
 #      - checkout
 #      - run: sudo apt-get update && sudo apt-get install gettext-base graphviz
 #      - set-build-env
-#      - run:
-#          name: Update image & version in manifest
-#          command: |
-#            envsubst < vamp/deployment.yaml > modified-deployment.yaml
-#            cat modified-deployment.yaml
+      - run:
+          name: Update image & version in manifest
+          command: |
+            envsubst < vamp/deployment.yaml > modified-deployment.yaml
+            cat modified-deployment.yaml
 #      - gcp-gke/update-kubeconfig-with-credentials:
 #          install-kubectl: true
 #          perform-login: true
