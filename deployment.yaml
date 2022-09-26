@@ -16,7 +16,7 @@ spec:
     metadata:
       labels:
         app: circleci-gke
-          version: "${VERSION}"
+        version: "${VERSION}"
     spec:
       containers:
         - name: circleci-gke
