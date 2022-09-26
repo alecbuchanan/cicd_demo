@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: circleci-django-demo-v${VERSION}
+  name: alec-buchanan-demo-v${VERSION}
   namespace: default
   labels:
     app: circleci-gke
@@ -21,7 +21,7 @@ spec:
       containers:
         - name: circleci-gke
             imagePullPolicy: Always
-            image: "us.gcr.io/django-demo-cci/circle-gke:${VERSION}"
+            image: "us.gcr.io/django-demo-cci/alec-buchanan-demo:${VERSION}"
             env:
               - name: SECRET_KEY
                 value: dummy

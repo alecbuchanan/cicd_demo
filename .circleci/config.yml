@@ -73,10 +73,6 @@ jobs:
       - snyk/scan:
           severity-threshold: critical
 
-
-
-
-
   build-and-push-image:
     machine:
       image: ubuntu-2004:current
@@ -89,16 +85,16 @@ jobs:
           registry-url: us.gcr.io
       - gcp-gcr/build-image:
           registry-url: us.gcr.io
-          image: circle-gke
+          image: alec-buchanan-demo
           tag: "${VERSION}"
       - gcp-gcr/push-image:
           registry-url: us.gcr.io
-          image: circle-gke
+          image: alec-buchanan-demo
           tag: "${VERSION}"
 
   update-deployment:
     docker:
-      - image: cimg/base:2022.09
+      - image: cimg/base:edge-18.04
     steps:
       - checkout
       - set-build-env
