@@ -32,17 +32,18 @@ spec:
             memory: 512Mi
           requests:
             memory: 128Mi
-#---
-#apiVersion: v1
-#kind: Service
-#metadata:
-#  name: bb-entrypoint
-#  namespace: default
-#spec:
-#  type: NodePort
-#  selector:
-#    bb: web
-#  ports:
-#  - port: 3000
-#    targetPort: 3000
-#    nodePort: 30001
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: alec-buchanan-demo-entrypoint
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: circleci-gke
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
