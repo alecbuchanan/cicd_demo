@@ -97,6 +97,7 @@ jobs:
       - image: cimg/base:edge-18.04
     steps:
       - checkout
+      - run: sudo apt-get update && sudo apt-get install gettext-base graphviz
       - set-build-env
       - run:
           name: Update image & version in manifest
