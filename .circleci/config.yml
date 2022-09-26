@@ -70,7 +70,8 @@ jobs:
       - checkout
       - python/install-packages:
           pkg-manager: pip
-      - snyk/scan
+      - snyk/scan:
+          severity-threshold: critical
 
 
 
