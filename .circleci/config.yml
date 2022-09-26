@@ -53,15 +53,16 @@ jobs:
       - run:
           name: Run tests
           command: |
-            # get test files while ignoring __init__ files
-            TESTFILES=$(circleci tests glob "polls/polls_tests.py" | sed 's/\S\+__init__.py//g')
-            echo $TESTFILES | tr ' ' '\n' | sort | uniq > circleci_test_files.txt
-            cat circleci_test_files.txt
-            TESTFILES=$(circleci tests split --split-by=timings circleci_test_files.txt)
-            # massage filepaths into format manage.py test accepts
-            TESTFILES=$(echo $TESTFILES | tr "/" "." | sed 's/\.py$//g')
-            echo $TESTFILES
-            pytest --verbose --junitxml=test-results/junit.xml $TEST_FILES
+            pytest --circleci-parallelize --junit-xml=test-results/junit.xml
+#            # get test files while ignoring __init__ files
+#            TESTFILES=$(circleci tests glob "polls/polls_tests.py" | sed 's/\S\+__init__.py//g')
+#            echo $TESTFILES | tr ' ' '\n' | sort | uniq > circleci_test_files.txt
+#            cat circleci_test_files.txt
+#            TESTFILES=$(circleci tests split --split-by=timings circleci_test_files.txt)
+#            # massage filepaths into format manage.py test accepts
+#            TESTFILES=$(echo $TESTFILES | tr "/" "." | sed 's/\.py$//g')
+#            echo $TESTFILES
+#            pytest --verbose --junitxml=test-results/junit.xml $TEST_FILES
 #            pipenv run python manage.py test --verbosity=2 $TESTFILES
 #            set -e
 #            TEST_FILES=$(circleci tests glob "polls/polls_tests.py" | circleci tests split --split-by=timings)
@@ -219,13 +220,13 @@ workflows:
    main:
      unless: << pipeline.parameters.cleanup >>
      jobs:
-       - build
+#       - build
 #       - lint:
 #           requires:
 #             - build
-       - test:
-           requires:
-             - build
+       - test
+#           requires:
+#             - build
 #       - manual-approval:
 #           type: approval
 #           requires:
