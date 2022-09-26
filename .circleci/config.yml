@@ -111,7 +111,7 @@ jobs:
       - kubernetes/create-or-update-resource:
           namespace: default
           resource-file-path: modified-deployment.yaml
-      - run: kubectl rollout status -f /home/circleci/project/deployment.yaml
+      - run: kubectl rollout status -f modified-deployment.yaml
 
 #  update-deployment:
 #    docker:
