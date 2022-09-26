@@ -19,19 +19,19 @@ spec:
         version: "${VERSION}"
     spec:
       containers:
-        - name: circleci-gke
-            imagePullPolicy: Always
-            image: "us.gcr.io/django-demo-cci/alec-buchanan-demo:${VERSION}"
-            env:
-              - name: SECRET_KEY
-                value: dummy
-            ports:
-              - containerPort: 8000
-            resources:
-              limits:
-                memory: 512Mi
-              requests:
-                memory: 128Mi
+      - name: circleci-gke
+        imagePullPolicy: Always
+        image: "us.gcr.io/django-demo-cci/alec-buchanan-demo:${VERSION}"
+        env:
+          - name: SECRET_KEY
+            value: dummy
+        ports:
+        - containerPort: 8000
+        resources:
+          limits:
+            memory: 512Mi
+        requests:
+            memory: 128Mi
 #---
 #apiVersion: v1
 #kind: Service
