@@ -61,7 +61,8 @@ jobs:
             # massage filepaths into format manage.py test accepts
             TESTFILES=$(echo $TESTFILES | tr "/" "." | sed 's/\.py$//g')
             echo $TESTFILES
-            pipenv run python manage.py test --verbosity=2 $TESTFILES
+            pytest --verbose --junitxml=test-results/junit.xml $TEST_FILES
+#            pipenv run python manage.py test --verbosity=2 $TESTFILES
 #            set -e
 #            TEST_FILES=$(circleci tests glob "polls/polls_tests.py" | circleci tests split --split-by=timings)
 #            mkdir -p test-results
