@@ -111,7 +111,7 @@ jobs:
       - kubernetes/create-or-update-resource:
           namespace: default
           resource-file-path: modified-deployment.yaml
-      - run: kubectl rollout status -f modified-deployment.yaml
+      - run: kubectl rollout status deployment/alec-buchanan-demo-"${VERSION}"
 
 #  update-deployment:
 #    docker:
@@ -180,18 +180,18 @@ workflows:
    main:
      unless: << pipeline.parameters.cleanup >>
      jobs:
-       - test
-       - lint
-       - snyk-scan
-       - build-and-push-image:
-           requires: ["test", "lint", "snyk-scan"]
-       - manual-approval:
-           type: approval
-           requires:
-             - build-and-push-image
-       - update-deployment:
-           requires:
-             - manual-approval
+#       - test
+#       - lint
+#       - snyk-scan
+#       - build-and-push-image:
+#           requires: ["test", "lint", "snyk-scan"]
+#       - manual-approval:
+#           type: approval
+#           requires:
+#             - build-and-push-image
+       - update-deployment
+#           requires:
+#             - manual-approval
 
 #       - update-deployment:
 #           requires:
