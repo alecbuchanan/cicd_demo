@@ -54,7 +54,7 @@ jobs:
           name: Run tests
           command: |
             set -e
-            TEST_FILES=$(circleci tests glob "polls/polls_test.py" | circleci tests split --split-by=timings)
+            TEST_FILES=$(circleci tests glob "polls/polls_tests.py" | circleci tests split --split-by=timings)
             mkdir -p test-results
             pytest --verbose --junitxml=test-results/junit.xml $TEST_FILES
             - store_test_results:
