@@ -87,13 +87,6 @@ jobs:
       - set-build-env
       - gcp-gcr/gcr-auth:
           registry-url: us.gcr.io
-#      - gcp-gcr/build-and-push-image:
-#          executor: python
-#          image: circle-gke
-#
-#          setup-remote-docker: true
-#          use-docker-layer-caching: true
-#          tag: "${VERSION}"
       - gcp-gcr/build-image:
           registry-url: us.gcr.io
           image: circle-gke
@@ -170,23 +163,16 @@ workflows:
    main:
      unless: << pipeline.parameters.cleanup >>
      jobs:
-#       - build
-#       - lint:
-#           requires:
-#             - build
        - test
        - lint
        - snyk-scan
-#           requires:
-#             - build
-#       - manual-approval:
-#           type: approval
-#           requires:
-#             - lint
-#             - test
-#       - build-and-push-image:
-#           requires:
-#             - manual-approval
+       - build-and-push-image:
+           requires: ["test", "lint", "snyk-scan"]
+       - manual-approval:
+           type: approval
+           requires:
+             - build-and-push-image
+
 #       - update-deployment:
 #           requires:
 #             - build-and-push-image
