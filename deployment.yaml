@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: circleci-django-demo-v${VERSION}
+  namespace: default
+  labels:
+    app: circleci-gke
+    version: "${VERSION}"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: circleci-gke
+      version: "${VERSION}"
+  template:
+    metadata:
+      labels:
+        app: circleci-gke
+          version: "${VERSION}"
+    spec:
+      containers:
+        - name: circleci-gke
+            imagePullPolicy: Always
+            image: "us.gcr.io/django-demo-cci/circle-gke:${VERSION}"
+            env:
+              - name: SECRET_KEY
+                value: dummy
+            ports:
+              - containerPort: 8000
+            resources:
+              limits:
+                memory: 512Mi
+              requests:
+                memory: 128Mi
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: bb-entrypoint
+#  namespace: default
+#spec:
+#  type: NodePort
+#  selector:
+#    bb: web
+#  ports:
+#  - port: 3000
+#    targetPort: 3000
+#    nodePort: 30001
