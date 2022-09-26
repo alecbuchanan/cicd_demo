@@ -64,6 +64,14 @@ jobs:
             pylint polls --exit-zero
           name: linting
 
+  snyk-scan:
+    executor: python
+    steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: pip
+      - snyk/scan
+
 
 
 
@@ -167,7 +175,7 @@ workflows:
 #             - build
        - test
        - lint
-       - snyk/scan
+       - snyk-scan
 #           requires:
 #             - build
 #       - manual-approval:
