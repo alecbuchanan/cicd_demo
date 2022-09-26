@@ -7,9 +7,9 @@ orbs:
   kubernetes: circleci/kubernetes@1.3.0
 
 executors:
-  my-executor:
+  python:
       docker:
-          - image: cimg/python:3.10.2
+          - image: cimg/python:3.10.7
 
 parameters:
   cleanup:
@@ -43,13 +43,24 @@ jobs:
       - python/install-packages:
           pkg-manager: pip
 
-#  test:
-#    executor: my-executor
-#    parallelism: 2
-#    steps:
-#      - checkout
+  test:
+    executor: python
+    parallelism: 2
+    steps:
+      - checkout
+      - run:
+          name: Run tests
+          command: |
+            set -e
+            TEST_FILES=$(circleci tests glob "polls/polls_test.py" | circleci tests split --split-by=timings)
+            mkdir -p test-results
+            pytest --verbose --junitxml=test-results/junit.xml $TEST_FILES
+            - store_test_results:
+                path: test-results
+            - store_artifacts:
+                path: test-results
 #      - python/test
-
+#
 #      - restore_cache:
 #          key: -pypi-<<parameters.cache-version>>-<<#parameters.include-branch-in-cache-key>>{{ .Branch }}-<</parameters.include-branch-in-cache-key>>{{ checksum "<< parameters.app-dir >>/<<parameters.pip-dependency-file>>" }}-<<#parameters.include-python-in-cache-key>>{{ checksum "/home/circleci/.pyenv/version" }}-<</parameters.include-python-in-cache-key>>
 #      - python/install-packages:
@@ -114,7 +125,7 @@ jobs:
       - gcp-gcr/gcr-auth:
           registry-url: us.gcr.io
 #      - gcp-gcr/build-and-push-image:
-#          executor: my-executor
+#          executor: python
 #          image: circle-gke
 #
 #          setup-remote-docker: true
@@ -200,7 +211,7 @@ workflows:
 #       - lint:
 #           requires:
 #             - build
-       - python/test:
+       - test:
            requires:
              - build
 #       - manual-approval:
