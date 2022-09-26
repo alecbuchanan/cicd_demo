@@ -111,7 +111,7 @@ jobs:
       - kubernetes/create-or-update-resource:
           namespace: default
           resource-file-path: modified-deployment.yaml
-      - run: kubectl rollout status deployment/circleci-gke
+      - run: kubectl rollout status deployment/alec-buchanan-demo-v"${VERSION}"
 
 #  update-deployment:
 #    docker:
