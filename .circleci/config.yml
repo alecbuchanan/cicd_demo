@@ -217,13 +217,11 @@ workflows:
    main:
      unless: << pipeline.parameters.cleanup >>
      jobs:
-       - build
+#       - build
 #       - lint:
 #           requires:
 #             - build
-       - test:
-           requires:
-             - build
+       - test
 #       - manual-approval:
 #           type: approval
 #           requires:
