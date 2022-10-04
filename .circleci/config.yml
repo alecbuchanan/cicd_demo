@@ -34,14 +34,14 @@ jobs:
           command: |
             sudo apt-get update
             sudo apt-get install imagemagick libmagickwand-dev
+#      - run:
+#          name: Check if imagemagik exists, if not install
+#          command: |
+#            convert -help
       - run:
           name: Check if imagemagik exists, if not install
           command: |
-            convert -help
-      - run:
-          name: Check if imagemagik exists, if not install
-          command: |
-            if ! command -v magick >/dev/null 2>&1
+            if ! command -v convert >/dev/null 2>&1
             then
               echo "Imagemagik could not be found, installing"
               sudo apt-get update
