@@ -37,7 +37,6 @@ jobs:
       - run:
           name: Check if imagemagik exists, if not install
           command: |
-            imagemagick -v
             magick -v
       - run:
           name: Check if imagemagik exists, if not install
