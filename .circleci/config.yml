@@ -37,6 +37,11 @@ jobs:
       - run:
           name: Check if imagemagik exists, if not install
           command: |
+            imagemagick -v
+            magick -v
+      - run:
+          name: Check if imagemagik exists, if not install
+          command: |
             if ! command -v magick >/dev/null 2>&1
             then
               echo "Imagemagik could not be found, installing"
