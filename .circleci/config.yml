@@ -37,7 +37,7 @@ jobs:
       - run:
           name: Check if imagemagik exists, if not install
           command: |
-            if ! command -v imagemagik &> /dev/null
+            if ! command -v imagemagick &> /dev/null
             then
               echo "Imagemagik could not be found, installing"
               sudo apt-get update
