@@ -24,6 +24,29 @@ commands:
             source $BASH_ENV
 
 jobs:
+  test_shell:
+    docker:
+      - image: cimg/ruby:3.1.2
+    steps:
+      - checkout
+      - run:
+          name: Install imagemagik
+          command: |
+            sudo apt-get update
+            sudo apt-get install imagemagick libmagickwand-dev
+      - run:
+          name: Check if imagemagik exists, if not install
+          command: |
+            if ! command -v imagemagik &> /dev/null
+            then
+              echo "Imagemagik could not be found, installing"
+              sudo apt-get update
+              sudo apt-get install imagemagick libmagickwand-dev
+              exit
+            fi
+            
+
+
   test:
     executor: python
     parallelism: 2
@@ -108,18 +131,19 @@ jobs:
 workflows:
    build-test-deploy:
      jobs:
-       - test
-       - lint
-       - snyk-scan
-       - build-and-push-image:
-           requires: ["test", "lint", "snyk-scan"]
-       - manual-approval:
-           type: approval
-           requires:
-             - build-and-push-image
-       - update-deployment:
-           requires:
-             - manual-approval
+       - test_shell
+#       - test
+#       - lint
+#       - snyk-scan
+#       - build-and-push-image:
+#           requires: ["test", "lint", "snyk-scan"]
+#       - manual-approval:
+#           type: approval
+#           requires:
+#             - build-and-push-image
+#       - update-deployment:
+#           requires:
+#             - manual-approval
 
 
 ###########################################################################################################################
