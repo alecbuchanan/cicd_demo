@@ -341,21 +341,21 @@ jobs:
             cat modified-deployment.yaml
 
 workflows:
-  circle-ci:
-    when:
-      or:
-        - << pipeline.parameters.circle-ci >>
-        - << pipeline.parameters.run-them-all >>
-    jobs:
-      - test
+   circle-ci:
+     when:
+       or:
+         - << pipeline.parameters.circle-ci >>
+         - << pipeline.parameters.run-them-all >>
+     jobs:
+       - test
 
-  docs:
-    when:
-      or:
-        - << pipeline.parameters.docs >>
-        - << pipeline.parameters.run-them-all >>
-    jobs:
-      - docs
+   docs:
+     when:
+       or:
+         - << pipeline.parameters.docs >>
+         - << pipeline.parameters.run-them-all >>
+     jobs:
+       - docs
 
    build-test-deploy:
      when:
