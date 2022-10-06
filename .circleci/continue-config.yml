@@ -341,13 +341,13 @@ jobs:
             cat modified-deployment.yaml
 
 workflows:
-   circle-ci:
-     when:
-       or:
-         - << pipeline.parameters.circle-ci >>
-         - << pipeline.parameters.run-them-all >>
-     jobs:
-       - test
+#   circle-ci:
+#     when:
+#       or:
+#         - << pipeline.parameters.circle-ci >>
+#         - << pipeline.parameters.run-them-all >>
+#     jobs:
+#       - test
 
    docs:
      when:
