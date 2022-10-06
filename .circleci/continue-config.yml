@@ -357,7 +357,7 @@ workflows:
      jobs:
        - docs
 
-   build-test-deploy:
+   polls-app:
      when:
        or:
          - << pipeline.parameters.mysite >>
