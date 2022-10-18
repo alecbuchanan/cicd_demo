@@ -76,7 +76,7 @@ jobs:
     resource_class: test_runner/ca-test
     steps:
       - checkout
-      - run: sudo apt-get update && sudo apt-get install gettext-base graphviz
+#      - run: sudo apt-get update && sudo apt-get install gettext-base graphviz
       - set-build-env
       - run:
           name: Update image & version in manifest
