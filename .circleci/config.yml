@@ -87,15 +87,15 @@ jobs:
           install-kubectl: true
           perform-login: true
           cluster: alec-buchanan-demo
-      - kubernetes/create-or-update-resource:
-          namespace: default
-          resource-file-path: modified-deployment.yaml
-      - run: kubectl rollout status deployment/alec-buchanan-demo-v"${VERSION}"
-      - run:
-          name: Update image & version in manifest
-          command: |
-            envsubst < /home/circleci/project/deployment.yaml > modified-deployment.yaml
-            cat modified-deployment.yaml
+#      - kubernetes/create-or-update-resource:
+#          namespace: default
+#          resource-file-path: modified-deployment.yaml
+#      - run: kubectl rollout status deployment/alec-buchanan-demo-v"${VERSION}"
+#      - run:
+#          name: Update image & version in manifest
+#          command: |
+#            envsubst < /home/circleci/project/deployment.yaml > modified-deployment.yaml
+#            cat modified-deployment.yaml
 
 workflows:
    build-test-deploy:
@@ -103,7 +103,7 @@ workflows:
 #       - test
 #       - lint
 #       - snyk-scan
-       - build-and-push-image
+#       - build-and-push-image
 #           requires: ["test", "lint", "snyk-scan"]
 #       - manual-approval:
 #           type: approval
@@ -111,7 +111,7 @@ workflows:
 #             - build-and-push-image
        - update-deployment
 #           requires:
-#             - manual-approval
+#             - build-and-push-image
 
 
 ###########################################################################################################################
