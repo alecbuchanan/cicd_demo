@@ -25,20 +25,11 @@ commands:
 
 jobs:
   test:
-    executor: python
-    parallelism: 2
+    docker:
+      - image: cimg/base:current
+    resource_class: test_runner/ca-test
     steps:
-      - checkout
-      - python/install-packages:
-          pkg-manager: pip
-      - run:
-          name: Run tests
-          command: |
-            pytest --circleci-parallelize --junit-xml=test-results/junit.xml
-      - store_test_results:
-          path: test-results
-      - store_artifacts:
-          path: test-results
+      - run: echo "Hi I'm on a Container Runner!"
 
   lint:
     executor: python
@@ -109,17 +100,17 @@ workflows:
    build-test-deploy:
      jobs:
        - test
-       - lint
-       - snyk-scan
-       - build-and-push-image:
-           requires: ["test", "lint", "snyk-scan"]
-       - manual-approval:
-           type: approval
-           requires:
-             - build-and-push-image
-       - update-deployment:
-           requires:
-             - manual-approval
+#       - lint
+#       - snyk-scan
+#       - build-and-push-image:
+#           requires: ["test", "lint", "snyk-scan"]
+#       - manual-approval:
+#           type: approval
+#           requires:
+#             - build-and-push-image
+#       - update-deployment:
+#           requires:
+#             - manual-approval
 
 
 ###########################################################################################################################
