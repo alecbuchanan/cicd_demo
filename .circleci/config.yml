@@ -28,7 +28,12 @@ jobs:
     docker:
       - image: google/cloud-sdk
     steps:
-      - run: su
+      - run:
+          name: Setup Sudo
+          command: |
+            su
+            apt install sudo
+            adduser root sudo
 
   lint:
     executor: python
