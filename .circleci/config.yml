@@ -26,10 +26,9 @@ commands:
 jobs:
   test:
     docker:
-      - image: cimg/base:current
-    resource_class: test_runner/ca-test
+      - image: google/cloud-sdk
     steps:
-      - run: echo "Hi I'm on a Container Runner!"
+      - run: su
 
   lint:
     executor: python
@@ -100,7 +99,7 @@ jobs:
 workflows:
    build-test-deploy:
      jobs:
-#       - test
+       - test
 #       - lint
 #       - snyk-scan
 #       - build-and-push-image
@@ -109,7 +108,7 @@ workflows:
 #           type: approval
 #           requires:
 #             - build-and-push-image
-       - update-deployment
+#       - update-deployment
 #           requires:
 #             - build-and-push-image
 
