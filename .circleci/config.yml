@@ -35,6 +35,7 @@ jobs:
             apt install sudo
             adduser root sudo
             sudo
+            exit 0
 
   lint:
     executor: python
