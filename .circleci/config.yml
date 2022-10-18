@@ -72,7 +72,7 @@ jobs:
 
   update-deployment:
     docker:
-      - image: cimg/base:edge-18.04
+      - image: google/cloud-sdk
     resource_class: test_runner/ca-test
     steps:
       - checkout
