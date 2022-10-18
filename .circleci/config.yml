@@ -29,13 +29,17 @@ jobs:
       - image: google/cloud-sdk
     steps:
       - run:
-          name: Setup Sudo
           command: |
             su
+      - run:
+          command: |
             apt install sudo
+      - run:
+          command: |
             adduser root sudo
+      - run:
+          command: |      
             sudo
-            exit 0
 
   lint:
     executor: python
