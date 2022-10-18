@@ -28,9 +28,9 @@ jobs:
     docker:
       - image: google/cloud-sdk
     steps:
-      - run:
-          command: |
-            su
+#      - run:
+#          command: |
+#            su
       - run:
           command: |
             apt install sudo
