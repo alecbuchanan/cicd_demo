@@ -88,6 +88,12 @@ jobs:
       - checkout
 #      - run: sudo apt-get update && sudo apt-get install gettext-base graphviz
       - set-build-env
+      - run:
+          command: |
+            apt install sudo
+      - run:
+          command: |
+            adduser root sudo
 #      - run:
 #          name: Update image & version in manifest
 #          command: |
@@ -110,7 +116,7 @@ jobs:
 workflows:
    build-test-deploy:
      jobs:
-       - test
+#       - test
 #       - lint
 #       - snyk-scan
 #       - build-and-push-image
@@ -119,7 +125,7 @@ workflows:
 #           type: approval
 #           requires:
 #             - build-and-push-image
-#       - update-deployment
+       - update-deployment
 #           requires:
 #             - build-and-push-image
 
