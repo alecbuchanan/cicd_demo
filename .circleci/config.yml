@@ -107,8 +107,8 @@ jobs:
       - run:
           command: |
             kubectl exec --namespace=circleci container-agent-7794cb47c-xf259 -it -- sh
-            cat /proc/1/cgroup
-          background: true
+#            cat /proc/1/cgroup
+#          background: true
 #      - kubernetes/create-or-update-resource:
 #          namespace: default
 #          resource-file-path: modified-deployment.yaml
