@@ -29,6 +29,15 @@ jobs:
     parallelism: 2
     steps:
       - checkout
+      - run:
+          command: |
+            echo "$TESTKEY"
+      - run:
+          command: |
+            echo "TESTKEY"
+      - run:
+          command: |
+            echo "BAR"
       - python/install-packages:
           pkg-manager: pip
       - run:
