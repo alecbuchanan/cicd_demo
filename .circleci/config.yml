@@ -37,7 +37,7 @@ jobs:
             echo "TESTKEY"
       - run:
           command: |
-            echo "BAR"
+            echo "BAR12345"
       - python/install-packages:
           pkg-manager: pip
       - run:
