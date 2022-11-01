@@ -112,7 +112,7 @@ workflows:
        - lint
        - snyk-scan
        - build-and-push-image:
-           requires: ["test", "lint"]
+#           requires: ["test", "lint"]
            requires: ["test", "lint", "snyk-scan"]
        - manual-approval:
            type: approval
