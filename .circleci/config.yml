@@ -30,7 +30,7 @@ jobs:
     steps:
       - checkout
       - run:
-          command: echo ${CIRCLE_PULL_REQUEST##*/}
+          command: echo "${CIRCLE_PULL_REQUEST##*/}"
       - python/install-packages:
           pkg-manager: pip
       - run:
