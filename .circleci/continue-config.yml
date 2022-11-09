@@ -130,24 +130,24 @@ jobs:
       - run: cat docs/docs.txt
 
 workflows:
-  circle-ci:
-    when:
-      or:
-        - << pipeline.parameters.circle-ci >>
-        - << pipeline.parameters.run-them-all >>
-    jobs:
-      - test
-      - lint
-      - snyk-scan
-      - build-and-push-image:
-          requires: [ "test", "lint", "snyk-scan" ]
-      - manual-approval:
-          type: approval
-          requires:
-            - build-and-push-image
-      - update-deployment:
-          requires:
-            - manual-approval
+#  circle-ci:
+#    when:
+#      or:
+#        - << pipeline.parameters.circle-ci >>
+#        - << pipeline.parameters.run-them-all >>
+#    jobs:
+#      - test
+#      - lint
+#      - snyk-scan
+#      - build-and-push-image:
+#          requires: [ "test", "lint", "snyk-scan" ]
+#      - manual-approval:
+#          type: approval
+#          requires:
+#            - build-and-push-image
+#      - update-deployment:
+#          requires:
+#            - manual-approval
 
   docs:
     when:
