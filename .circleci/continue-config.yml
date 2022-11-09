@@ -136,7 +136,18 @@ workflows:
         - << pipeline.parameters.circle-ci >>
         - << pipeline.parameters.run-them-all >>
     jobs:
-      - build
+      - test
+      - lint
+      - snyk-scan
+      - build-and-push-image:
+          requires: [ "test", "lint", "snyk-scan" ]
+      - manual-approval:
+          type: approval
+          requires:
+            - build-and-push-image
+      - update-deployment:
+          requires:
+            - manual-approval
 
   docs:
     when:
