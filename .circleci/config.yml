@@ -81,11 +81,11 @@ jobs:
       - gcp-gcr/build-image:
           registry-url: us.gcr.io
           image: alec-buchanan-demo
-          tag: "${VERSION}"
-      - gcp-gcr/push-image:
-          registry-url: us.gcr.io
-          image: alec-buchanan-demo
-          tag: "${VERSION}"
+          tag: "${VERSION}"-rupalabs
+#      - gcp-gcr/push-image:
+#          registry-url: us.gcr.io
+#          image: alec-buchanan-demo
+#          tag: "${VERSION}"
 
   update-deployment:
     docker:
@@ -116,10 +116,10 @@ jobs:
 workflows:
    build-test-deploy:
      jobs:
-       - test
+#       - test
 #       - lint
 #       - snyk-scan
-#       - build-and-push-image:
+       - build-and-push-image
 #           requires: ["test", "lint", "snyk-scan"]
 #       - manual-approval:
 #           type: approval
