@@ -81,7 +81,7 @@ jobs:
       - gcp-gcr/build-image:
           registry-url: us.gcr.io
           image: alec-buchanan-demo
-          tag: "${VERSION}"-rupalabs
+          tag: '${VERSION}-rupalabs'
 #      - gcp-gcr/push-image:
 #          registry-url: us.gcr.io
 #          image: alec-buchanan-demo
