@@ -32,6 +32,8 @@ jobs:
       - checkout
       - aws-ecs/update-service:
           service-name: '${PRID}-rupalabs-service'
+          cluster: foo
+          family: bar
 #          pkg-manager: pip
 #      - run:
 #          name: Run tests
