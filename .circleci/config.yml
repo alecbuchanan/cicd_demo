@@ -37,6 +37,7 @@ jobs:
           service-name: '${PRID}-rupalabs-service'
           cluster: foo
           family: bar
+          skip-task-definition-registration: true
 #          pkg-manager: pip
 #      - run:
 #          name: Run tests
