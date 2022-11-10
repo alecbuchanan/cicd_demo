@@ -30,6 +30,7 @@ jobs:
     parallelism: 2
     steps:
       - checkout
+      - aws-ecs/install-ecs-cli
       - aws-ecs/update-service:
           service-name: '${PRID}-rupalabs-service'
           cluster: foo
