@@ -33,8 +33,7 @@ on:
         options:
           - 'dev'
           - 'qa'
-          - 'prod'
-          - 'staging'    
+          - 'prod'    
 
 
 
