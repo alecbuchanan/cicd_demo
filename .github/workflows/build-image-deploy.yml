@@ -15,6 +15,16 @@ on:
           - 'warning'
           - 'error'
           - 'critical'
+      environment:
+        description: 'Environment'
+        required: false
+        default: 'dev'
+        type: choice
+        options:
+          - 'dev'
+          - 'test'
+          - 'prod'
+          - 'uat'    
 
 
 
