@@ -15,27 +15,6 @@ on:
           - 'warning'
           - 'error'
           - 'critical'
-      tags:
-        description: 'Tags'
-        required: false
-        default: 'latest'
-        type: choice
-        options:
-          - 'latest'
-          - 'dev'
-          - 'qa'
-          - 'prod'
-      environment:
-        description: 'Environment'
-        required: false
-        default: 'dev'
-        type: choice
-        options:
-          - 'dev'
-          - 'qa'
-          - 'prod'
-          - 'staging'
-          - 'uat'    
 
 
 
