@@ -65,10 +65,10 @@ jobs:
 #          severity-threshold: critical
 
  build-and-push-image:
-   machine:
-     image: ubuntu-2004:current
-     docker_layer_caching: true
-   resource_class: medium  
+  #  machine:
+  #    image: ubuntu-2004:current
+  #    docker_layer_caching: true
+  #  resource_class: medium  
    description: Build and push image to ECR
    steps:
      - checkout
@@ -86,6 +86,7 @@ jobs:
           registry-id: AWS_ECR_REGISTRY_ID
           role-arn: ${AWS_ROLE_ARN}
      - aws-ecr/build-and-push-image:
+          use-docker-layer-caching: true
           checkout: false
           region: ${AWS_REGION}
           repo: alecbuchanan-cci
