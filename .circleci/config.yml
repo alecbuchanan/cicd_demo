@@ -71,35 +71,19 @@ jobs:
    steps:
      - checkout
      - set-build-env
-    #  - aws-cli/setup:
-    #      role-arn: AWS_ROLE_ARN
-    #      aws-region: AWS_REGION
-    #      proflie-name: "CCI_DEMO"
-    #  - run:
-    #    name: Log Into ECR
-    #    command: |
-    #      aws ecr get-login-password --profile "CCI_DEMO"
+     - aws-cli/setup:
+         role-arn: AWS_ROLE_ARN
+         aws-region: AWS_REGION
+         proflie-name: "CCI_DEMO"
+     - run:
+       name: Log Into ECR
+       command: |
+         aws ecr get-login-password --profile "CCI_DEMO"
     #  - aws-ecr/ecr-login:
     #       assume-web-identity: true
     #       region: AWS_REGION
     #       registry-id: AWS_ECR_REGISTRY_ID
     #       role-arn: AWS_ROLE_ARN
-     - run:
-       name: Log Into ECR
-       command: |
-        $(aws sts assume-role-with-web-identity \
-          --role-arn "${AWS_ROLE_ARN}" \
-          --role-session-name "cci" \
-          --web-identity-token "${CIRCLE_OIDC_TOKEN}" \
-          --duration-seconds "3600" \
-          --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' \
-          --output text)
-        
-
-        echo "export AWS_ACCESS_KEY_ID=\"${AWS_ACCESS_KEY_ID} >> $BASH_ENV \""
-        echo "export AWS_SECRET_ACCESS_KEY=\"${AWS_SECRET_ACCESS_KEY} >> $BASH_ENV \""
-        echo "export AWS_SESSION_TOKEN=\"${AWS_SESSION_TOKEN} >> $BASH_ENV \""
-        source $BASH_ENV
      - aws-ecr/build-and-push-image:
           checkout: false
           region: AWS_REGION
