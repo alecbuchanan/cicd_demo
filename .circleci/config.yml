@@ -13,6 +13,7 @@ executors:
  python:
      docker:
          - image: cimg/python:3.10.7
+     resource_class: medium 
 
 commands:
  set-build-env:
