@@ -90,7 +90,7 @@ jobs:
           tag: "${VERSION}"
 
  deploy-to-eks:
-   docker:
+    docker:
       - image: cimg/base:edge-18.04
     steps:
       - checkout
@@ -118,31 +118,31 @@ jobs:
 
      
 
-#  update-deployment:
-#    docker:
-#      - image: cimg/base:edge-18.04
-#    steps:
-#      - checkout
-#      - run: sudo apt-get update && sudo apt-get install gettext-base graphviz
-#      - set-build-env
-#      - run:
-#          name: Update image & version in manifest
-#          command: |
-#            envsubst < /home/circleci/project/deployment.yaml > modified-deployment.yaml
-#            cat modified-deployment.yaml
-#      - gcp-gke/update-kubeconfig-with-credentials:
-#          install-kubectl: true
-#          perform-login: true
-#          cluster: alec-buchanan-demo
-#      - kubernetes/create-or-update-resource:
-#          namespace: default
-#          resource-file-path: modified-deployment.yaml
-#      - run: kubectl rollout status deployment/alec-buchanan-demo-v"${VERSION}"
-#      - run:
-#          name: Update image & version in manifest
-#          command: |
-#            envsubst < /home/circleci/project/deployment.yaml > modified-deployment.yaml
-#            cat modified-deployment.yaml
+ update-deployment:
+   docker:
+     - image: cimg/base:edge-18.04
+   steps:
+     - checkout
+     - run: sudo apt-get update && sudo apt-get install gettext-base graphviz
+     - set-build-env
+     - run:
+         name: Update image & version in manifest
+         command: |
+           envsubst < /home/circleci/project/deployment.yaml > modified-deployment.yaml
+           cat modified-deployment.yaml
+     - gcp-gke/update-kubeconfig-with-credentials:
+         install-kubectl: true
+         perform-login: true
+         cluster: alec-buchanan-demo
+     - kubernetes/create-or-update-resource:
+         namespace: default
+         resource-file-path: modified-deployment.yaml
+     - run: kubectl rollout status deployment/alec-buchanan-demo-v"${VERSION}"
+     - run:
+         name: Update image & version in manifest
+         command: |
+           envsubst < /home/circleci/project/deployment.yaml > modified-deployment.yaml
+           cat modified-deployment.yaml
 
 workflows:
   build-test-deploy:
