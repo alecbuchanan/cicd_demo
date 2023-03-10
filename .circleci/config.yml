@@ -34,7 +34,9 @@ jobs:
      - run:
          name: Run tests
          command: |
-           pytest --circleci-parallelize --junit-xml=test-results/junit.xml
+          #  pytest --circleci-parallelize --junit-xml=test-results/junit.xml
+          TESTFILES=$(circleci tests glob "polls/polls_tests.py" | circleci tests split --split-by=timings)
+          pytest $TESTFILES --junit-xml=test-results/junit.xml
      - store_test_results:
          path: test-results
      - store_artifacts:
