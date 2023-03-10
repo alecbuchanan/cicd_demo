@@ -80,12 +80,12 @@ jobs:
     #       aws ecr get-login-password --profile "default"
      - aws-ecr/ecr-login:
           assume-web-identity: true
-          region: $AWS_REGION
-          registry-id: $AWS_ECR_REGISTRY_ID
-          role-arn: $AWS_ROLE_ARN
+          region: ${AWS_REGION}
+          registry-id: AWS_ECR_REGISTRY_ID
+          role-arn: ${AWS_ROLE_ARN}
      - aws-ecr/build-and-push-image:
           checkout: false
-          region: $AWS_REGION
+          region: ${AWS_REGION}
           repo: alecbuchanandemo-cci
           tag: "${VERSION}"
 
