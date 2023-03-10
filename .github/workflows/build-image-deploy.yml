@@ -1,78 +1,79 @@
-name: alecbuchanan/cicd_demo/build-image-deploy
+# name: alecbuchanan/cicd_demo/build-image-deploy
 
-on:
-  push:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Log Level'
-        required: false
-        default: 'warning'
-        type: choice
-        options:
-          - 'debug'
-          - 'info'
-          - 'warning'
-          - 'error'
-          - 'critical'
-      tags:
-        description: 'Tags'
-        required: false
-        default: 'latest'
-        type: choice
-        options:
-          - 'latest'
-          - 'dev'
-          - 'qa'
-          - 'prod'
+# on:
+#   push:
+#   workflow_dispatch:
+#     inputs:
+#       version:
+#         description: 'Log Level'
+#         required: false
+#         default: 'warning'
+#         type: choice
+#         options:
+#           - 'debug'
+#           - 'info'
+#           - 'warning'
+#           - 'error'
+#           - 'critical'
+#       environment:
+#         description: 'Environment'
+#         required: false
+#         default: 'dev'
+#         type: choice
+#         options:
+#           - 'dev'
+#           - 'test'
+#           - 'prod'
+#           - 'uat'    
+
 
 
     
-defaults:
-  run:
-    shell: bash  
+# defaults:
+#   run:
+#     shell: bash  
 
-env:
-  SECRET_KEY: dummy
-  # total-runners: 5
-  IMAGE_NAME: alec-buchanan-demo
+# env:
+#   SECRET_KEY: dummy
+#   # total-runners: 5
+#   IMAGE_NAME: alec-buchanan-demo
 
-jobs:
+# jobs:
 
-  call-build-and-test:
-    uses: ./.github/workflows/build-and-test.yml 
+#   call-build-and-test:
+#     uses: ./.github/workflows/build-and-test.yml 
 
-  build-and-push-image:
-      # if: github.ref == 'refs/heads/main' #only run on main branch
-      runs-on: ubuntu-latest
-      needs:
-        - call-build-and-test
-      steps:
-        - uses: actions/checkout@v2
-        - name: Setup Build Environment Variables
-          run: |-
-            echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
-            source $GITHUB_ENV
-          shell: bash
-        - name: Set Up Docker Buildx
-          uses: docker/setup-buildx-action@v2.4.1
-        - name: Log into registry
-          uses: docker/login-action@v1
-          with:
-            registry: ${{ secrets.ACR_ENDPOINT }}
-            username: ${{ secrets.ACR_USERNAME }}
-            password: ${{ secrets.ACR_PASSWORD }}
-        - name: Build & Push
-          uses: docker/build-push-action@v4.0.0
-          with:
-            context: .
-            push: true
-            tags: ${{ secrets.ACR_ENDPOINT }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
-            cache-from: type=gha
-            cache-to: type=gha,mode=max    
+#   build-and-push-image:
+#       # if: github.ref == 'refs/heads/main' #only run on main branch
+#       runs-on: ubuntu-latest
+#       needs:
+#         - call-build-and-test
+#       steps:
+#         - uses: actions/checkout@v2
+#         - name: Setup Build Environment Variables
+#           run: |-
+#             echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+#             source $GITHUB_ENV
+#           shell: bash
+#         - name: Set Up Docker Buildx
+#           uses: docker/setup-buildx-action@v2.4.1
+#         - name: Log into registry
+#           uses: docker/login-action@v1
+#           with:
+#             registry: ${{ secrets.ACR_ENDPOINT }}
+#             username: ${{ secrets.ACR_USERNAME }}
+#             password: ${{ secrets.ACR_PASSWORD }}
+#         - name: Build & Push
+#           uses: docker/build-push-action@v4.0.0
+#           with:
+#             context: .
+#             push: true
+#             tags: ${{ secrets.ACR_ENDPOINT }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+#             cache-from: type=gha
+#             cache-to: type=gha,mode=max    
 
 
-# deploy_to_aks:
+# # deploy_to_aks:
 
 
 
@@ -81,84 +82,84 @@ jobs:
 
              
 
-  # lint:
-  #   runs-on: ubuntu-latest
-  #   container:
-  #     image: python:3.10.7
-  #   steps:
-  #   - uses: actions/checkout@v3.3.0
-  #   - name: Get python version
-  #     id: python-version
-  #     run: echo "::set-output name=python-version::$(python -V 2>&1)"
-  #   - uses: actions/cache@v3.2.2
-  #     with:
-  #       path: "~/.cache/pip"
-  #       key: "${{ runner.os }}-${{ github.ref }}-pip-${{ steps.python-version.outputs.python-version }}-${{ hashFiles('requirements.txt') }}"
-  #   - name: Install dependencies with pip using project
-  #     run: pip install -r requirements.txt
-  #   - name: linting
-  #     run: pylint polls --exit-zero
+#   # lint:
+#   #   runs-on: ubuntu-latest
+#   #   container:
+#   #     image: python:3.10.7
+#   #   steps:
+#   #   - uses: actions/checkout@v3.3.0
+#   #   - name: Get python version
+#   #     id: python-version
+#   #     run: echo "::set-output name=python-version::$(python -V 2>&1)"
+#   #   - uses: actions/cache@v3.2.2
+#   #     with:
+#   #       path: "~/.cache/pip"
+#   #       key: "${{ runner.os }}-${{ github.ref }}-pip-${{ steps.python-version.outputs.python-version }}-${{ hashFiles('requirements.txt') }}"
+#   #   - name: Install dependencies with pip using project
+#   #     run: pip install -r requirements.txt
+#   #   - name: linting
+#   #     run: pylint polls --exit-zero
 
-  # snyk-scan:
-  #   runs-on: ubuntu-latest
-  #   container:
-  #     image: python:3.10.7
-  #   steps:
-  #   - uses: actions/checkout@v3.3.0
-  #   - name: Get python version
-  #     id: python-version
-  #     run: echo "::set-output name=python-version::$(python -V 2>&1)"
-  #   - uses: actions/cache@v3.2.2
-  #     with:
-  #       path: "~/.cache/pip"
-  #       key: "${{ runner.os }}-${{ github.ref }}-pip-${{ steps.python-version.outputs.python-version }}-${{ hashFiles('requirements.txt') }}"
-  #   - name: Install dependencies with pip using project
-  #     run: pip install -r requirements.txt
-#     # This item has no matching transformer
-#     - snyk_snyk_scan:
-  # build-and-push-image:
-  #   runs-on: ubuntu-20.04
-  #   needs:
-  #   - test
-  #   - lint
-  #   - snyk-scan
-  #   steps:
-  #   - uses: actions/checkout@v3.3.0
-  #   - uses: "./.github/actions/set-build-env"
-#     # This item has no matching transformer
-#     - circleci_gcp_gcr_gcr_auth:
-#     # This item has no matching transformer
-#     - circleci_gcp_gcr_build_image:
-#     # This item has no matching transformer
-#     - circleci_gcp_gcr_push_image:
-#   manual-approval:
-#     environment:
-#       name: approval
-#     runs-on: ubuntu-latest
-#     needs:
-#     - build-and-push-image
-#     steps:
-#     - run: echo 'approved'
-#   update-deployment:
-#     runs-on: ubuntu-latest
-#     container:
-#       image: ubuntu
-#     needs:
-#     - manual-approval
-#     steps:
-#     - uses: actions/checkout@v3.3.0
-#     - run: sudo apt-get update && sudo apt-get install gettext-base graphviz
-#     - uses: "./.github/actions/set-build-env"
-#     - name: Update image & version in manifest
-#       run: |-
-#         envsubst < /home/circleci/project/deployment.yaml > modified-deployment.yaml
-#         cat modified-deployment.yaml
+#   # snyk-scan:
+#   #   runs-on: ubuntu-latest
+#   #   container:
+#   #     image: python:3.10.7
+#   #   steps:
+#   #   - uses: actions/checkout@v3.3.0
+#   #   - name: Get python version
+#   #     id: python-version
+#   #     run: echo "::set-output name=python-version::$(python -V 2>&1)"
+#   #   - uses: actions/cache@v3.2.2
+#   #     with:
+#   #       path: "~/.cache/pip"
+#   #       key: "${{ runner.os }}-${{ github.ref }}-pip-${{ steps.python-version.outputs.python-version }}-${{ hashFiles('requirements.txt') }}"
+#   #   - name: Install dependencies with pip using project
+#   #     run: pip install -r requirements.txt
 # #     # This item has no matching transformer
-# #     - circleci_gcp_gke_update_kubeconfig_with_credentials:
+# #     - snyk_snyk_scan:
+#   # build-and-push-image:
+#   #   runs-on: ubuntu-20.04
+#   #   needs:
+#   #   - test
+#   #   - lint
+#   #   - snyk-scan
+#   #   steps:
+#   #   - uses: actions/checkout@v3.3.0
+#   #   - uses: "./.github/actions/set-build-env"
 # #     # This item has no matching transformer
-# #     - circleci_kubernetes_create_or_update_resource:
-#     - run: kubectl rollout status deployment/alec-buchanan-demo-v"${VERSION}"
-#     - name: Update image & version in manifest
-#       run: |-
-#         envsubst < /home/circleci/project/deployment.yaml > modified-deployment.yaml
-#         cat modified-deployment.yaml
+# #     - circleci_gcp_gcr_gcr_auth:
+# #     # This item has no matching transformer
+# #     - circleci_gcp_gcr_build_image:
+# #     # This item has no matching transformer
+# #     - circleci_gcp_gcr_push_image:
+# #   manual-approval:
+# #     environment:
+# #       name: approval
+# #     runs-on: ubuntu-latest
+# #     needs:
+# #     - build-and-push-image
+# #     steps:
+# #     - run: echo 'approved'
+# #   update-deployment:
+# #     runs-on: ubuntu-latest
+# #     container:
+# #       image: ubuntu
+# #     needs:
+# #     - manual-approval
+# #     steps:
+# #     - uses: actions/checkout@v3.3.0
+# #     - run: sudo apt-get update && sudo apt-get install gettext-base graphviz
+# #     - uses: "./.github/actions/set-build-env"
+# #     - name: Update image & version in manifest
+# #       run: |-
+# #         envsubst < /home/circleci/project/deployment.yaml > modified-deployment.yaml
+# #         cat modified-deployment.yaml
+# # #     # This item has no matching transformer
+# # #     - circleci_gcp_gke_update_kubeconfig_with_credentials:
+# # #     # This item has no matching transformer
+# # #     - circleci_kubernetes_create_or_update_resource:
+# #     - run: kubectl rollout status deployment/alec-buchanan-demo-v"${VERSION}"
+# #     - name: Update image & version in manifest
+# #       run: |-
+# #         envsubst < /home/circleci/project/deployment.yaml > modified-deployment.yaml
+# #         cat modified-deployment.yaml
