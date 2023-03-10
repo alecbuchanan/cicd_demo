@@ -74,7 +74,7 @@ jobs:
      - aws-cli/setup:
          role-arn: AWS_ROLE_ARN
          aws-region: AWS_REGION
-         proflie-name: "CCI_DEMO"
+         profile-name: "CCI_DEMO"
      - run:
          name: Log Into ECR
          command: |
