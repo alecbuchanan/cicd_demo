@@ -90,59 +90,59 @@ jobs:
           tag: "${VERSION}"
 
  deploy-to-eks:
-    docker:
-      - image: cimg/base:edge-18.04
-    steps:
-      - checkout
-      - run: sudo apt-get update && sudo apt-get install gettext-base graphviz          
-      - set-build-env
-      - run:
-        name: Update image & version in manifest
-        command: |
+   docker:
+     - image: cimg/base:edge-18.04
+   steps:
+     - checkout
+     - run: sudo apt-get update && sudo apt-get install gettext-base graphviz          
+     - set-build-env
+     - run:
+         name: Update image & version in manifest
+         command: |
           envsubst < /home/circleci/project/deployment.yaml > modified-deployment.yaml
           cat modified-deployment.yaml
-      - aws-ecr/ecr-login:
-          assume-web-identity: true
-          region: ${AWS_REGION}
-          registry-id: AWS_ECR_REGISTRY_ID
-          role-arn: ${AWS_ROLE_ARN}
-      - run:
-        name: Get KubeConfig
-        command: |
-          aws eks --region ${AWS_REGION} update-kubeconfig --name ${AWS_EKS_CLUSTER_NAME}
-      - run:
-        name: Deploy to EKS
-        command: |
+     - aws-ecr/ecr-login:
+         assume-web-identity: true
+         region: ${AWS_REGION}
+         registry-id: AWS_ECR_REGISTRY_ID
+         role-arn: ${AWS_ROLE_ARN}
+     - run:
+         name: Get KubeConfig
+         command: |
+           aws eks --region ${AWS_REGION} update-kubeconfig --name ${AWS_EKS_CLUSTER_NAME}
+     - run:
+         name: Deploy to EKS
+         command: |
           kubectl apply -f modified-deployment.yaml --namespace=default
 
 
      
 
- update-deployment:
-   docker:
-     - image: cimg/base:edge-18.04
-   steps:
-     - checkout
-     - run: sudo apt-get update && sudo apt-get install gettext-base graphviz
-     - set-build-env
-     - run:
-         name: Update image & version in manifest
-         command: |
-           envsubst < /home/circleci/project/deployment.yaml > modified-deployment.yaml
-           cat modified-deployment.yaml
-     - gcp-gke/update-kubeconfig-with-credentials:
-         install-kubectl: true
-         perform-login: true
-         cluster: alec-buchanan-demo
-     - kubernetes/create-or-update-resource:
-         namespace: default
-         resource-file-path: modified-deployment.yaml
-     - run: kubectl rollout status deployment/alec-buchanan-demo-v"${VERSION}"
-     - run:
-         name: Update image & version in manifest
-         command: |
-           envsubst < /home/circleci/project/deployment.yaml > modified-deployment.yaml
-           cat modified-deployment.yaml
+#  update-deployment:
+#    docker:
+#      - image: cimg/base:edge-18.04
+#    steps:
+#      - checkout
+#      - run: sudo apt-get update && sudo apt-get install gettext-base graphviz
+#      - set-build-env
+#      - run:
+#          name: Update image & version in manifest
+#          command: |
+#            envsubst < /home/circleci/project/deployment.yaml > modified-deployment.yaml
+#            cat modified-deployment.yaml
+#      - gcp-gke/update-kubeconfig-with-credentials:
+#          install-kubectl: true
+#          perform-login: true
+#          cluster: alec-buchanan-demo
+#      - kubernetes/create-or-update-resource:
+#          namespace: default
+#          resource-file-path: modified-deployment.yaml
+#      - run: kubectl rollout status deployment/alec-buchanan-demo-v"${VERSION}"
+#      - run:
+#          name: Update image & version in manifest
+#          command: |
+#            envsubst < /home/circleci/project/deployment.yaml > modified-deployment.yaml
+#            cat modified-deployment.yaml
 
 workflows:
   build-test-deploy:
