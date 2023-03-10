@@ -89,8 +89,8 @@ jobs:
           repo: alecbuchanan-cci
           tag: "${VERSION}"
 
-  deploy-to-eks:
-    docker:
+ deploy-to-eks:
+   docker:
       - image: cimg/base:edge-18.04
     steps:
       - checkout
@@ -152,6 +152,10 @@ workflows:
       # - snyk-scan
       - build-and-push-image:
           context: aws
+      - deploy-to-eks:
+          context: aws
+          requires:
+            - build-and-push-image    
       #     requires: ["test", "lint", "snyk-scan"]
       # - manual-approval:
       #     type: approval
