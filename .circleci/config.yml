@@ -148,23 +148,18 @@ jobs:
 workflows:
   build-test-deploy:
     jobs:
-      # - test
-      # - lint
+      - test
+      - lint
       # - snyk-scan
       - build-and-push-image:
           context: aws
+          requires:
+            - test
+            - lint
       - deploy-to-eks:
           context: aws
           requires:
             - build-and-push-image    
-      #     requires: ["test", "lint", "snyk-scan"]
-      # - manual-approval:
-      #     type: approval
-      #     requires:
-      #       - build-and-push-image
-      # - update-deployment:
-      #     requires:
-      #       - manual-approval
 
 
 # ##########################################################################################################################
