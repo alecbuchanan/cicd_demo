@@ -76,9 +76,9 @@ jobs:
          aws-region: AWS_REGION
          proflie-name: "CCI_DEMO"
      - run:
-       name: Log Into ECR
-       command: |
-         aws ecr get-login-password --profile "CCI_DEMO"
+         name: Log Into ECR
+         command: |
+          aws ecr get-login-password --profile "CCI_DEMO"
     #  - aws-ecr/ecr-login:
     #       assume-web-identity: true
     #       region: AWS_REGION
